@@ -1,32 +1,57 @@
 services:
+  # The Nginx Reverse Proxy Service
   nginx:
     image: emb417/rpi-nginx:latest
+    container_name: rpi-nginx
     restart: always
     ports:
+      # Expose HTTP and HTTPS to the public internet.
       - "80:80"
       - "443:443"
+    networks:
+      # Connect this service to our internal network.
+      - rpi-network
     volumes:
+      # Mount the SSL certificates from the host machine for HTTPS.
       - /etc/letsencrypt/live/metaforiq.com:/etc/nginx/certs
     depends_on:
+      # Nginx must wait for the web and API services to be ready.
       - metaforiq-next
       - metaforiq-node
 
-  metaforiq-next:
-    image: emb417/metaforiq-next:latest
-    restart: always
-    ports:
-      - "3000"
-    env_file:
-      - ./metaforiq-next.env
-    depends_on:
-      - metaforiq-node
-
+  # The Node.js API Service
   metaforiq-node:
     image: emb417/metaforiq-node:latest
+    container_name: metaforiq-node
     restart: always
-    ports:
-      - "8008"
     env_file:
+      # Get environment variables from the file in the same directory.
       - ./metaforiq-node.env
+    networks:
+      # Connect this service to the rpi-network.
+      - rpi-network
+    # Use a named volume for persistent data. This ensures the db.json file
+    # persists across container restarts and avoids host-level file-locking issues.
     volumes:
-      - ./db.json:/app/db.json
+      - metaforiq-node-data:/app
+
+  # The Next.js App Service
+  metaforiq-next:
+    image: emb417/metaforiq-next:latest
+    container_name: metaforiq-next
+    restart: always
+    env_file:
+      # Get environment variables from the file in the same directory.
+      - ./metaforiq-next.env
+    networks:
+      # Connect this service to the rpi-network.
+      - rpi-network
+
+# Define a private bridge network for your services to communicate.
+networks:
+  rpi-network:
+    driver: bridge
+
+# Define the named volume. Docker will manage this volume and its data.
+volumes:
+  metaforiq-node-data:

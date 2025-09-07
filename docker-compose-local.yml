@@ -9,33 +9,49 @@ services:
       - "80:80"
       - "443:443"
     networks:
+      # Connect this service to our internal rpi-network.
       - rpi-network
     volumes:
       # This mount tells Nginx to use your local, non-SSL configuration.
-      - ../rpi-nginx/sites-available/default-local.conf:/etc/nginx/sites-available/default.conf
+      - ../rpi-nginx/sites-available/default-local.conf:/etc/nginx/sites-enabled/default.conf
+    # The Nginx service depends on the Next.js app to be running.
+    depends_on:
+      - metaforiq-next
+      - metaforiq-node
 
   # The Node.js API Service
-  api:
+  metaforiq-node:
     build:
       context: ../metaforiq-node
     container_name: metaforiq-node
     restart: unless-stopped
     env_file:
-      - ../metaforiq-node/.env
+      - ./metaforiq-node.env
     networks:
+      # Connect this service to the rpi-network.
       - rpi-network
+    # Use a named volume for persistent data. This is the correct way to
+    # handle files that need to persist across container restarts.
+    volumes:
+      - metaforiq-node-data:/app
 
   # The Next.js App Service
-  web:
+  metaforiq-next:
     build:
       context: ../metaforiq-next
     container_name: metaforiq-next
     restart: unless-stopped
     env_file:
-      - ../metaforiq-next/.env
+      - ./metaforiq-next.env
     networks:
+      # Connect this service to the rpi-network.
       - rpi-network
 
+# Define a private bridge network for your services to communicate.
 networks:
   rpi-network:
     driver: bridge
+
+# Define the named volume. Docker will manage this volume and its data.
+volumes:
+  metaforiq-node-data:

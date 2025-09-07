@@ -1,0 +1,41 @@
+services:
+  # The Nginx Reverse Proxy Service
+  nginx:
+    build:
+      context: ../rpi-nginx
+    container_name: rpi-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - rpi-network
+    volumes:
+      # This mount tells Nginx to use your local, non-SSL configuration.
+      - ../rpi-nginx/sites-available/default-local.conf:/etc/nginx/sites-available/default.conf
+
+  # The Node.js API Service
+  api:
+    build:
+      context: ../metaforiq-node
+    container_name: metaforiq-node
+    restart: unless-stopped
+    env_file:
+      - ../metaforiq-node/.env
+    networks:
+      - rpi-network
+
+  # The Next.js App Service
+  web:
+    build:
+      context: ../metaforiq-next
+    container_name: metaforiq-next
+    restart: unless-stopped
+    env_file:
+      - ../metaforiq-next/.env
+    networks:
+      - rpi-network
+
+networks:
+  rpi-network:
+    driver: bridge

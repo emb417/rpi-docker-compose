@@ -1,0 +1,32 @@
+services:
+  nginx:
+    image: emb417/rpi-nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt/live/metaforiq.com:/etc/nginx/certs
+    depends_on:
+      - metaforiq-next
+      - metaforiq-node
+
+  metaforiq-next:
+    image: emb417/metaforiq-next:latest
+    restart: always
+    ports:
+      - "3000"
+    env_file:
+      - ./metaforiq-next.env
+    depends_on:
+      - metaforiq-node
+
+  metaforiq-node:
+    image: emb417/metaforiq-node:latest
+    restart: always
+    ports:
+      - "8008"
+    env_file:
+      - ./metaforiq-node.env
+    volumes:
+      - ./db.json:/app/db.json

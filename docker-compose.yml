@@ -30,9 +30,9 @@ services:
     networks:
       # Connect this service to the rpi-network.
       - rpi-network
-    # Mount the database file from the host machine.
+    # Mount a named volume for data persistence.
     volumes:
-      - /home/eric/rpi-docker-compose:/app
+      - metaforiq-node-data:/app
 
   # The Next.js App Service
   metaforiq-next:
@@ -50,3 +50,6 @@ services:
 networks:
   rpi-network:
     external: true
+
+volumes:
+  metaforiq-node-data:

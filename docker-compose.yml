@@ -53,3 +53,4 @@ networks:
 
 volumes:
   metaforiq-node-data:
+    external: true

@@ -32,7 +32,7 @@ services:
       - rpi-network
     # Mount a named volume for data persistence.
     volumes:
-      - metaforiq-node-data:/app
+      - metaforiq-node-data:/app/data
 
   # The Next.js App Service
   metaforiq-next:

@@ -47,18 +47,6 @@ services:
       # Connect this service to the rpi-network.
       - rpi-network
 
-  # A Webhook Listener Service for CD
-  webhook-listener:
-    image: emb417/rpi-docker-webhooks:latest
-    container_name: webhook-listener
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - .:/compose
-
-    networks:
-      - rpi-network
-
 # Define a private bridge network for your services to communicate.
 networks:
   rpi-network:

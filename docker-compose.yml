@@ -30,10 +30,9 @@ services:
     networks:
       # Connect this service to the rpi-network.
       - rpi-network
-    # Use a named volume for persistent data. This ensures the db.json file
-    # persists across container restarts and avoids host-level file-locking issues.
+    # Mount the database file from the host machine.
     volumes:
-      - metaforiq-node-data:/app
+      - /home/eric/rpi-docker-compose/db.json:/app/db.json
 
   # The Next.js App Service
   metaforiq-next:
@@ -51,7 +50,3 @@ services:
 networks:
   rpi-network:
     external: true
-
-# Define the named volume. Docker will manage this volume and its data.
-volumes:
-  metaforiq-node-data:

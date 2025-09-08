@@ -13,7 +13,10 @@ services:
       - rpi-network
     volumes:
       # Mount the SSL certificates from the host machine for HTTPS.
-      - /etc/letsencrypt/live/metaforiq.com:/etc/nginx/certs
+      # The 'live' directory contains the symlinks.
+      - /etc/letsencrypt/live/metaforiq.com:/etc/nginx/certs/live:ro
+      # The 'archive' directory contains the actual certificate files.
+      - /etc/letsencrypt/archive/metaforiq.com:/etc/nginx/certs/archive:ro
     depends_on:
       # Nginx must wait for the web and API services to be ready.
       - metaforiq-next

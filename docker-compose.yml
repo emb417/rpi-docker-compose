@@ -49,8 +49,7 @@ services:
 
   # A Webhook Listener Service for CD
   webhook-listener:
-    build:
-      context: ../rpi-docker-webhooks
+    image: emb417/rpi-docker-webhooks:latest
     container_name: webhook-listener
     restart: always
     volumes:

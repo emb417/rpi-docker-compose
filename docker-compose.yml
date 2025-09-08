@@ -47,10 +47,10 @@ services:
       # Connect this service to the rpi-network.
       - rpi-network
 
-# Define a private bridge network for your services to communicate.
+# Define an external network for your services to communicate.
 networks:
   rpi-network:
-    driver: bridge
+    external: true
 
 # Define the named volume. Docker will manage this volume and its data.
 volumes:

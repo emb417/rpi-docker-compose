@@ -32,7 +32,7 @@ services:
       - rpi-network
     # Mount the database file from the host machine.
     volumes:
-      - /home/eric/rpi-docker-compose/db.json:/app/db.json
+      - /home/eric/rpi-docker-compose:/app
 
   # The Next.js App Service
   metaforiq-next:

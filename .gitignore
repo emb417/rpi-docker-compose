@@ -1,4 +1,8 @@
-# macOS
+# macOS specific files
 .DS_Store
+
+# Ignore env files
 *.env
+
+# Ignore db file
 db.json

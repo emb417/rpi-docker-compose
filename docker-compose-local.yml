@@ -7,17 +7,18 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
-      - "443:443"
     networks:
-      # Connect this service to our internal rpi-network.
       - rpi-network
     volumes:
       # This mount tells Nginx to use your local, non-SSL configuration.
       - ../rpi-nginx/sites-available/default-local.conf:/etc/nginx/sites-enabled/default.conf
-    # The Nginx service depends on the Next.js app to be running.
+    # The Nginx service depends on the Next.js app and the other APIs to be running.
     depends_on:
       - metaforiq-next
       - metaforiq-node
+      - vpc-data-api
+      - vps-data-api
+      - vps-next
 
   # The Node.js API Service
   metaforiq-node:
@@ -28,10 +29,7 @@ services:
     env_file:
       - ./metaforiq-node.env
     networks:
-      # Connect this service to the rpi-network.
       - rpi-network
-    # Use a named volume for persistent data. This is the correct way to
-    # handle files that need to persist across container restarts.
     volumes:
       - metaforiq-node-data:/app
 
@@ -44,8 +42,49 @@ services:
     env_file:
       - ./metaforiq-next.env
     networks:
-      # Connect this service to the rpi-network.
       - rpi-network
+  
+  # The VPC Data API Service
+  vpc-data-api:
+    build:
+      context: ../vpc-data-api
+    container_name: vpc-data-api
+    restart: unless-stopped
+    env_file:
+      - ./vpc-data-api.env
+    networks:
+      - rpi-network
+
+  # The VPS Data API Service
+  vps-data-api:
+    build:
+      context: ../vps-data-api
+    container_name: vps-data-api
+    restart: unless-stopped
+    networks:
+      - rpi-network
+
+  # The Next.js App Service
+  vpc-next:
+    build:
+      context: ../vpc-next
+    container_name: vpc-next
+    restart: unless-stopped
+    env_file:
+      - ./vpc-next-local.env
+    networks:
+      - rpi-network
+
+  # The VPC Discord Bot
+  # vpc-discord-bot:
+  #   build:
+  #     context: ../vpc-discord-bot
+  #   container_name: vpc-discord-bot
+  #   restart: unless-stopped
+  #   env_file:
+  #     - ./vpc-discord-bot.env
+  #   networks:
+  #     - rpi-network
 
 # Define a private bridge network for your services to communicate.
 networks:

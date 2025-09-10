@@ -18,7 +18,7 @@ services:
       - metaforiq-node
       - vpc-data-api
       - vps-data-api
-      - vps-next
+      - vpc-next
 
   # The Node.js API Service
   metaforiq-node:

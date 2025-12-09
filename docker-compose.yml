@@ -60,16 +60,6 @@ services:
     networks:
       - rpi-network
 
-  # The Next.js App Service
-  # vpc-next:
-  #   image: emb417/vpc-next:latest
-  #   container_name: vpc-next
-  #   restart: always
-  #   env_file:
-  #     - ./vpc-next.env
-  #   networks:
-  #     - rpi-network
-
 # Define an external network for your services to communicate.
 networks:
   rpi-network:

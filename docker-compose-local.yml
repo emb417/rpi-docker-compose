@@ -64,28 +64,6 @@ services:
     networks:
       - rpi-network
 
-  # The Next.js App Service
-  vpc-next:
-    build:
-      context: ../vpc-next
-    container_name: vpc-next
-    restart: unless-stopped
-    env_file:
-      - ./vpc-next-local.env
-    networks:
-      - rpi-network
-
-  # The VPC Discord Bot
-  # vpc-discord-bot:
-  #   build:
-  #     context: ../vpc-discord-bot
-  #   container_name: vpc-discord-bot
-  #   restart: unless-stopped
-  #   env_file:
-  #     - ./vpc-discord-bot.env
-  #   networks:
-  #     - rpi-network
-
 # Define a private bridge network for your services to communicate.
 networks:
   rpi-network:

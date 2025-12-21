@@ -20,7 +20,7 @@ services:
       - vpc-data-api
       - vps-data-api
       - silverbullet
-      - vikunja
+      - planka
 
   # The Node.js API Service
   metaforiq-node:
@@ -67,23 +67,38 @@ services:
     image: ghcr.io/silverbulletmd/silverbullet:latest
     container_name: silverbullet
     restart: always
-    networks:
-      - rpi-network
     env_file:
       - ./silverbullet.env
+    networks:
+      - rpi-network
     volumes:
       - ~/silverbullet-data:/space
 
-  vikunja:
-    image: vikunja/vikunja:latest
-    container_name: vikunja
+  planka:
+    image: ghcr.io/plankanban/planka:latest
+    container_name: planka
     restart: always
     env_file:
-      - ./vikunja.env
+      - ./planka.env
+    depends_on:
+      - planka-db
     networks:
       - rpi-network
     volumes:
-      - ~/vikunja-data:/app/vikunja/files
+      - ~/planka-data/uploads:/app/public/user-avatars
+      - ~/planka-data/attachments:/app/public/project-attachments
+
+  planka-db:
+    image: postgres:15
+    container_name: planka-db
+    restart: always
+    env_file:
+      - planka-db.env
+    networks:
+      - rpi-network
+    volumes:
+      - ~/planka-data/db:/var/lib/postgresql/data
+
 
 # Define an external network for your services to communicate.
 networks:

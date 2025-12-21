@@ -70,7 +70,7 @@ services:
     networks:
       - rpi-network
     env_file:
-      - silverbullet.env
+      - ./silverbullet.env
     volumes:
       - ~/silverbullet-data:/space
 
@@ -79,7 +79,7 @@ services:
     container_name: vikunja
     restart: always
     env_file:
-      - vikunja.env
+      - ./vikunja.env
     networks:
       - rpi-network
     volumes:

@@ -19,6 +19,8 @@ services:
       - metaforiq-node
       - vpc-data-api
       - vps-data-api
+      - silverbullet
+      - vikunja
 
   # The Node.js API Service
   metaforiq-node:
@@ -59,6 +61,29 @@ services:
     restart: always
     networks:
       - rpi-network
+
+  # Silverbullet Notes Service
+  silverbullet:
+    image: ghcr.io/silverbulletmd/silverbullet:latest
+    container_name: silverbullet
+    restart: always
+    networks:
+      - rpi-network
+    env_file:
+      - silverbullet.env
+    volumes:
+      - ~/silverbullet-data:/space
+
+  vikunja:
+    image: vikunja/vikunja:latest
+    container_name: vikunja
+    restart: always
+    env_file:
+      - vikunja.env
+    networks:
+      - rpi-network
+    volumes:
+      - ~/vikunja-data:/app/vikunja/files
 
 # Define an external network for your services to communicate.
 networks:

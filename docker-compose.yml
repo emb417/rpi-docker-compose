@@ -62,18 +62,7 @@ services:
     networks:
       - rpi-network
 
-  # Silverbullet Notes Service
-  silverbullet:
-    image: ghcr.io/silverbulletmd/silverbullet:latest
-    container_name: silverbullet
-    restart: always
-    env_file:
-      - ./silverbullet.env
-    networks:
-      - rpi-network
-    volumes:
-      - ~/silverbullet-data:/space
-
+  # The Planka Kanban Board Trello Clone
   planka:
     image: ghcr.io/plankanban/planka:latest
     container_name: planka
@@ -98,6 +87,18 @@ services:
       - rpi-network
     volumes:
       - ~/planka-data/db:/var/lib/postgresql/data
+
+  # The Trilium personal knowledge management service
+  trilium:
+    image: triliumnext/trilium:latest
+    container_name: trilium
+    restart: always
+    networks:
+      - rpi-network
+    volumes:
+      - ~/trilium-data:/home/node/trilium-data
+    environment:
+      - TRILIUM_DATA_DIR=/home/node/trilium-data
 
 
 # Define an external network for your services to communicate.

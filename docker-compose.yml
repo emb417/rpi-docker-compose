@@ -19,8 +19,8 @@ services:
       - metaforiq-node
       - vpc-data-api
       - vps-data-api
-      - silverbullet
       - planka
+      - trilium
 
   # The Node.js API Service
   metaforiq-node:
@@ -82,7 +82,7 @@ services:
     container_name: planka-db
     restart: always
     env_file:
-      - planka-db.env
+      - ./planka-db.env
     networks:
       - rpi-network
     volumes:

@@ -5,22 +5,20 @@ services:
     container_name: rpi-nginx
     restart: always
     ports:
-      # Expose HTTP and HTTPS to the public internet.
       - "80:80"
       - "443:443"
     networks:
       - rpi-network
     volumes:
-      # Mount the SSL certificates from the host machine for HTTPS.
       - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
-      # Nginx must wait for the web and API services to be ready.
       - metaforiq-next
       - metaforiq-node
       - vpc-data-api
       - vps-data-api
       - planka
       - trilium
+      - open-webui
 
   # The Node.js API Service
   metaforiq-node:
@@ -100,6 +98,17 @@ services:
     environment:
       - TRILIUM_DATA_DIR=/home/node/trilium-data
 
+  # The Open WebUI Service
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    restart: always
+    env_file:
+      - ./open-webui.env
+    networks:
+      - rpi-network
+    volumes:
+      - open-webui-data:/app/backend/data
 
 # Define an external network for your services to communicate.
 networks:
@@ -110,3 +119,4 @@ networks:
 volumes:
   metaforiq-node-data:
     external: true
+  open-webui-data:

@@ -22,7 +22,7 @@ services:
     image: certbot/dns-cloudflare
     restart: always
     networks:
-      - vpc-network
+      - rpi-network
     volumes:
       - ./cloudflare:/etc/cloudflare
       - ./certbot/conf:/etc/letsencrypt

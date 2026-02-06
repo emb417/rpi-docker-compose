@@ -8,7 +8,7 @@ services:
   # The Nginx Reverse Proxy Service
   nginx:
     image: emb417/rpi-nginx:latest
-    restart: always
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
@@ -27,7 +27,7 @@ services:
   # The Certbot Service
   certbot:
     image: certbot/dns-cloudflare
-    restart: always
+    restart: unless-stopped
     networks:
       - rpi-network
     volumes:
@@ -43,7 +43,7 @@ services:
   # The Node.js API Service
   metaforiq-node:
     image: emb417/metaforiq-node:latest
-    restart: always
+    restart: unless-stopped
     env_file:
       - ./metaforiq-node.env
     networks:
@@ -55,7 +55,7 @@ services:
   # The Next.js App Service
   metaforiq-next:
     image: emb417/metaforiq-next:latest
-    restart: always
+    restart: unless-stopped
     env_file:
       - ./metaforiq-next.env
     networks:
@@ -65,7 +65,7 @@ services:
   # The Planka Kanban Board Trello Clone
   planka:
     image: ghcr.io/plankanban/planka:latest
-    restart: always
+    restart: unless-stopped
     env_file:
       - ./planka.env
     depends_on:
@@ -79,7 +79,7 @@ services:
 
   planka-db:
     image: postgres:15
-    restart: always
+    restart: unless-stopped
     env_file:
       - ./planka-db.env
     networks:
@@ -91,7 +91,7 @@ services:
   # The Trilium personal knowledge management service
   trilium:
     image: triliumnext/trilium:latest
-    restart: always
+    restart: unless-stopped
     networks:
       - rpi-network
     volumes:
@@ -103,7 +103,7 @@ services:
   # The Open WebUI Service
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
-    restart: always
+    restart: unless-stopped
     env_file:
       - ./open-webui.env
     networks:

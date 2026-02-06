@@ -3,27 +3,22 @@ services:
   nginx:
     build:
       context: ../rpi-nginx
-    container_name: rpi-nginx
     restart: unless-stopped
     ports:
       - "80:80"
     networks:
       - rpi-network
     volumes:
-      # This mount tells Nginx to use your local, non-SSL configuration.
-      - ../rpi-nginx/sites-available/default-local.conf:/etc/nginx/sites-enabled/default.conf
+      - ./certbot/conf:/etc/letsencrypt
     # The Nginx service depends on the Next.js app and the other APIs to be running.
     depends_on:
       - metaforiq-next
       - metaforiq-node
-      - vpc-data-api
-      - vps-data-api
 
   # The Node.js API Service
   metaforiq-node:
     build:
       context: ../metaforiq-node
-    container_name: metaforiq-node
     restart: unless-stopped
     env_file:
       - ./metaforiq-node.env
@@ -36,30 +31,9 @@ services:
   metaforiq-next:
     build:
       context: ../metaforiq-next
-    container_name: metaforiq-next
     restart: unless-stopped
     env_file:
       - ./metaforiq-next.env
-    networks:
-      - rpi-network
-  
-  # The VPC Data API Service
-  vpc-data-api:
-    build:
-      context: ../vpc-data-api
-    container_name: vpc-data-api
-    restart: unless-stopped
-    env_file:
-      - ./vpc-data-api.env
-    networks:
-      - rpi-network
-
-  # The VPS Data API Service
-  vps-data-api:
-    build:
-      context: ../vps-data-api
-    container_name: vps-data-api
-    restart: unless-stopped
     networks:
       - rpi-network
 

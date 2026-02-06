@@ -2,7 +2,6 @@ services:
   # The Nginx Reverse Proxy Service
   nginx:
     image: emb417/rpi-nginx:latest
-    container_name: rpi-nginx
     restart: always
     ports:
       - "80:80"
@@ -10,20 +9,33 @@ services:
     networks:
       - rpi-network
     volumes:
-      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
     depends_on:
       - metaforiq-next
       - metaforiq-node
-      - vpc-data-api
-      - vps-data-api
       - planka
       - trilium
       - open-webui
 
+  # The Certbot Service
+  certbot:
+    image: certbot/dns-cloudflare
+    restart: always
+    networks:
+      - vpc-network
+    volumes:
+      - ./cloudflare:/etc/cloudflare
+      - ./certbot/conf:/etc/letsencrypt
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    logging: *default-logging
+    deploy:
+      resources:
+        limits:
+          memory: 32M
+
   # The Node.js API Service
   metaforiq-node:
     image: emb417/metaforiq-node:latest
-    container_name: metaforiq-node
     restart: always
     env_file:
       - ./metaforiq-node.env
@@ -35,35 +47,15 @@ services:
   # The Next.js App Service
   metaforiq-next:
     image: emb417/metaforiq-next:latest
-    container_name: metaforiq-next
     restart: always
     env_file:
       - ./metaforiq-next.env
     networks:
       - rpi-network
 
-  # The VPC Data API Service
-  vpc-data-api:
-    image: emb417/vpc-data-api:latest
-    container_name: vpc-data-api
-    restart: always
-    env_file:
-      - ./vpc-data-api.env
-    networks:
-      - rpi-network
-
-  # The VPS Data API Service
-  vps-data-api:
-    image: emb417/vps-data-api:latest
-    container_name: vps-data-api
-    restart: always
-    networks:
-      - rpi-network
-
   # The Planka Kanban Board Trello Clone
   planka:
     image: ghcr.io/plankanban/planka:latest
-    container_name: planka
     restart: always
     env_file:
       - ./planka.env
@@ -77,7 +69,6 @@ services:
 
   planka-db:
     image: postgres:15
-    container_name: planka-db
     restart: always
     env_file:
       - ./planka-db.env
@@ -89,7 +80,6 @@ services:
   # The Trilium personal knowledge management service
   trilium:
     image: triliumnext/trilium:latest
-    container_name: trilium
     restart: always
     networks:
       - rpi-network
@@ -101,7 +91,6 @@ services:
   # The Open WebUI Service
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
-    container_name: open-webui
     restart: always
     env_file:
       - ./open-webui.env

@@ -6,3 +6,14 @@
 
 # Ignore db file
 db.json
+
+# certbot except renewal-hooks/post
+certbot/conf/accounts/
+certbot/conf/archive/
+certbot/conf/live/
+certbot/conf/renewal/
+certbot/conf/*.conf
+certbot/conf/*.pem
+
+# cloudflare credentials
+cloudflare/credentials.ini

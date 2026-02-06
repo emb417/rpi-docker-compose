@@ -1,3 +1,9 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "14"
+
 services:
   # The Nginx Reverse Proxy Service
   nginx:
@@ -14,6 +20,7 @@ services:
     depends_on:
       - metaforiq-next
       - metaforiq-node
+    logging: *default-logging
 
   # The Node.js API Service
   metaforiq-node:
@@ -26,6 +33,7 @@ services:
       - rpi-network
     volumes:
       - metaforiq-node-data:/app
+    logging: *default-logging
 
   # The Next.js App Service
   metaforiq-next:
@@ -36,6 +44,7 @@ services:
       - ./metaforiq-next.env
     networks:
       - rpi-network
+    logging: *default-logging
 
 # Define a private bridge network for your services to communicate.
 networks:

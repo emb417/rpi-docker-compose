@@ -1,3 +1,9 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "14"
+    
 services:
   # The Nginx Reverse Proxy Service
   nginx:
@@ -16,6 +22,7 @@ services:
       - planka
       - trilium
       - open-webui
+    logging: *default-logging
 
   # The Certbot Service
   certbot:
@@ -43,6 +50,7 @@ services:
       - rpi-network
     volumes:
       - metaforiq-node-data:/app/data
+    logging: *default-logging
 
   # The Next.js App Service
   metaforiq-next:
@@ -52,6 +60,7 @@ services:
       - ./metaforiq-next.env
     networks:
       - rpi-network
+    logging: *default-logging
 
   # The Planka Kanban Board Trello Clone
   planka:
@@ -66,6 +75,7 @@ services:
     volumes:
       - ~/planka-data/uploads:/app/public/user-avatars
       - ~/planka-data/attachments:/app/public/project-attachments
+    logging: *default-logging
 
   planka-db:
     image: postgres:15
@@ -76,6 +86,7 @@ services:
       - rpi-network
     volumes:
       - ~/planka-data/db:/var/lib/postgresql/data
+    logging: *default-logging
 
   # The Trilium personal knowledge management service
   trilium:
@@ -87,6 +98,7 @@ services:
       - ~/trilium-data:/home/node/trilium-data
     environment:
       - TRILIUM_DATA_DIR=/home/node/trilium-data
+    logging: *default-logging
 
   # The Open WebUI Service
   open-webui:
@@ -98,6 +110,7 @@ services:
       - rpi-network
     volumes:
       - open-webui-data:/app/backend/data
+    logging: *default-logging
 
 # Define an external network for your services to communicate.
 networks:

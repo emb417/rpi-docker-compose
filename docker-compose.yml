@@ -35,10 +35,6 @@ services:
       - ./certbot/conf:/etc/letsencrypt
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     logging: *default-logging
-    deploy:
-      resources:
-        limits:
-          memory: 32M
 
   # The Node.js API Service
   metaforiq-node:

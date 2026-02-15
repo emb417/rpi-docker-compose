@@ -69,8 +69,8 @@ services:
     networks:
       - rpi-network
     volumes:
-      - ~/planka-data/uploads:/app/public/user-avatars
-      - ~/planka-data/attachments:/app/public/project-attachments
+      - ~/planka-data/data:/app/data
+
     logging: *default-logging
 
   planka-db:

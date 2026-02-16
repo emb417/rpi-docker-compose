@@ -17,23 +17,22 @@ services:
       - rpi-network
     volumes:
       - ./certbot/conf:/etc/letsencrypt
-    # The Nginx service depends on the Next.js app and the other APIs to be running.
+    # The Nginx service depends on the Next.js app to be running.
     depends_on:
       - metaforiq-next
-      - metaforiq-node
     logging: *default-logging
 
-  # The Node.js API Service
-  metaforiq-node:
+  # The Node.js Discord Bot Service
+  libowski-bot:
     build:
-      context: ../metaforiq-node
+      context: ../libowski-bot
     restart: unless-stopped
     env_file:
-      - ./metaforiq-node.env
+      - ./libowski-bot-test.env
     networks:
       - rpi-network
     volumes:
-      - metaforiq-node-data:/app
+      - ./libowski-bot-data:/app/data
     logging: *default-logging
 
   # The Next.js App Service
@@ -47,11 +46,7 @@ services:
       - rpi-network
     logging: *default-logging
 
-# Define a private bridge network for your services to communicate.
 networks:
   rpi-network:
     driver: bridge
 
-# Define the named volume. Docker will manage this volume and its data.
-volumes:
-  metaforiq-node-data:

@@ -18,7 +18,6 @@ services:
       - ./certbot/conf:/etc/letsencrypt:ro
     depends_on:
       - metaforiq-next
-      - metaforiq-node
       - planka
       - trilium
       - open-webui
@@ -37,15 +36,15 @@ services:
     logging: *default-logging
 
   # The Node.js API Service
-  metaforiq-node:
-    image: emb417/metaforiq-node:latest
+  libowski-bot:
+    image: emb417/libowski-bot:latest
     restart: unless-stopped
     env_file:
-      - ./metaforiq-node.env
+      - ./libowski-bot.env
     networks:
       - rpi-network
     volumes:
-      - metaforiq-node-data:/app/data
+      - ./libowski-bot-data:/app/data
     logging: *default-logging
 
   # The Next.js App Service
@@ -115,6 +114,4 @@ networks:
 
 # Define an external volume for data persistence.
 volumes:
-  metaforiq-node-data:
-    external: true
   open-webui-data:

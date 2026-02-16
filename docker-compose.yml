@@ -35,7 +35,7 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     logging: *default-logging
 
-  # The Node.js API Service
+  # The Node.js Discord Bot Service
   libowski-bot:
     image: emb417/libowski-bot:latest
     restart: unless-stopped

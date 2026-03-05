@@ -95,18 +95,6 @@ services:
       - TRILIUM_DATA_DIR=/home/node/trilium-data
     logging: *default-logging
 
-  # The Open WebUI Service
-  open-webui:
-    image: ghcr.io/open-webui/open-webui:main
-    restart: unless-stopped
-    env_file:
-      - ./open-webui.env
-    networks:
-      - rpi-network
-    volumes:
-      - open-webui-data:/app/backend/data
-    logging: *default-logging
-
   # The Uptime Kuma Service
   uptime-kuma:
     image: louislam/uptime-kuma:latest
@@ -121,7 +109,3 @@ services:
 networks:
   rpi-network:
     external: true
-
-# Define an external volume for data persistence.
-volumes:
-  open-webui-data:

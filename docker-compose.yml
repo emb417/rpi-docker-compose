@@ -20,7 +20,7 @@ services:
       - metaforiq-next
       - planka
       - trilium
-      - open-webui
+      - uptime-kuma
     logging: *default-logging
 
   # The Certbot Service

@@ -107,6 +107,16 @@ services:
       - open-webui-data:/app/backend/data
     logging: *default-logging
 
+  # The Uptime Kuma Service
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    restart: unless-stopped
+    networks:
+      - rpi-network
+    volumes:
+      - ~/uptime-kuma-data:/app/data
+    logging: *default-logging
+
 # Define an external network for your services to communicate.
 networks:
   rpi-network:

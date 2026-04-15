@@ -46,6 +46,15 @@ services:
       - rpi-network
     logging: *default-logging
 
+  # The Next.js App Service
+  mistandlore:
+    build:
+      context: ../mistandlore
+    restart: unless-stopped
+    networks:
+      - rpi-network
+    logging: *default-logging
+
 networks:
   rpi-network:
     driver: bridge

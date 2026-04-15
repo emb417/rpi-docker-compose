@@ -105,6 +105,14 @@ services:
       - ~/uptime-kuma-data:/app/data
     logging: *default-logging
 
+  # The Mist+Lore Next.js App
+  mistandlore:
+    image: emb417/mistandlore:latest
+    restart: unless-stopped
+    networks:
+      - rpi-network
+    logging: *default-logging
+
 # Define an external network for your services to communicate.
 networks:
   rpi-network:

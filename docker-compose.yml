@@ -18,6 +18,7 @@ services:
       - ./certbot/conf:/etc/letsencrypt:ro
     depends_on:
       - metaforiq-next
+      - mistandlore
       - planka
       - trilium
       - uptime-kuma

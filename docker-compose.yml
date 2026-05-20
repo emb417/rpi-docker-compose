@@ -22,6 +22,9 @@ services:
       - planka
       - trilium
       - uptime-kuma
+      - effin-money-web
+      - effin-money-www
+      - effin-money-api
     logging: *default-logging
 
   # The Certbot Service
@@ -109,6 +112,56 @@ services:
   # The Mist+Lore Next.js App
   mistandlore:
     image: emb417/mistandlore:latest
+    restart: unless-stopped
+    networks:
+      - rpi-network
+    logging: *default-logging
+
+  effin-money-db:
+    image: mongo:8.2
+    container_name: effin-money-db
+    restart: unless-stopped
+    networks:
+      - rpi-network
+    volumes:
+      - ~/effin-money-data/db:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    logging: *default-logging
+
+  effin-money-api:
+    image: effin-money-api:latest
+    container_name: effin-money-api
+    restart: unless-stopped
+    env_file:
+      - ./effin-money-api.env
+    environment:
+      - MONGO_URI=mongodb://effin-money-db:27017/effin-money
+    networks:
+      - rpi-network
+    depends_on:
+      effin-money-db:
+        condition: service_healthy
+    logging: *default-logging
+
+  effin-money-web:
+    image: effin-money-web:latest
+    container_name: effin-money-web
+    restart: unless-stopped
+    env_file:
+      - ./effin-money-web.env
+    networks:
+      - rpi-network
+    depends_on:
+      - effin-money-api
+    logging: *default-logging
+
+  effin-money-www:
+    image: effin-money-www:latest
+    container_name: effin-money-www
     restart: unless-stopped
     networks:
       - rpi-network

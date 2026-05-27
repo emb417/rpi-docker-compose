@@ -115,6 +115,8 @@ services:
     restart: unless-stopped
     networks:
       - rpi-network
+    environment:
+      - NEXT_PUBLIC_GA_MEASUREMENT_ID=G-0E9J2CSSNT
     logging: *default-logging
 
   effin-money-db:

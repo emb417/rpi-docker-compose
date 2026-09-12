@@ -19,8 +19,6 @@ services:
     depends_on:
       - metaforiq-next
       - mistandlore
-      - planka
-      - trilium
       - uptime-kuma
       - effin-money-web
       - effin-money-www

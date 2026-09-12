@@ -3,7 +3,7 @@ x-logging: &default-logging
   options:
     max-size: "10m"
     max-file: "14"
-    
+
 services:
   # The Nginx Reverse Proxy Service
   nginx:
@@ -36,7 +36,8 @@ services:
     volumes:
       - ./cloudflare:/etc/cloudflare
       - ./certbot/conf:/etc/letsencrypt
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+      - /var/run/docker.sock:/var/run/docker.sock
+    entrypoint: "/bin/sh -c 'apk add --no-cache curl; trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     logging: *default-logging
 
   # The Node.js Discord Bot Service
@@ -84,6 +85,7 @@ services:
   effin-money-db:
     image: mongo:8.2
     container_name: effin-money-db
+    pull_policy: never
     restart: unless-stopped
     networks:
       - rpi-network
@@ -99,6 +101,7 @@ services:
   effin-money-api:
     image: effin-money-api:latest
     container_name: effin-money-api
+    pull_policy: never
     restart: unless-stopped
     env_file:
       - ./effin-money-api.env
@@ -106,6 +109,8 @@ services:
       - MONGO_URI=mongodb://effin-money-db:27017/effin-money
     networks:
       - rpi-network
+    volumes:
+      - ~/effin-money-data/fastembed-cache:/models
     depends_on:
       effin-money-db:
         condition: service_healthy
@@ -114,6 +119,7 @@ services:
   effin-money-web:
     image: effin-money-web:latest
     container_name: effin-money-web
+    pull_policy: never
     restart: unless-stopped
     env_file:
       - ./effin-money-web.env
@@ -126,6 +132,7 @@ services:
   effin-money-www:
     image: effin-money-www:latest
     container_name: effin-money-www
+    pull_policy: never
     restart: unless-stopped
     networks:
       - rpi-network

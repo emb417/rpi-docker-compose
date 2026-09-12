@@ -62,44 +62,6 @@ services:
       - rpi-network
     logging: *default-logging
 
-  # The Planka Kanban Board Trello Clone
-  planka:
-    image: ghcr.io/plankanban/planka:latest
-    restart: unless-stopped
-    env_file:
-      - ./planka.env
-    depends_on:
-      - planka-db
-    networks:
-      - rpi-network
-    volumes:
-      - ~/planka-data/data:/app/data
-
-    logging: *default-logging
-
-  planka-db:
-    image: postgres:15
-    restart: unless-stopped
-    env_file:
-      - ./planka-db.env
-    networks:
-      - rpi-network
-    volumes:
-      - ~/planka-data/db:/var/lib/postgresql/data
-    logging: *default-logging
-
-  # The Trilium personal knowledge management service
-  trilium:
-    image: triliumnext/trilium:latest
-    restart: unless-stopped
-    networks:
-      - rpi-network
-    volumes:
-      - ~/trilium-data:/home/node/trilium-data
-    environment:
-      - TRILIUM_DATA_DIR=/home/node/trilium-data
-    logging: *default-logging
-
   # The Uptime Kuma Service
   uptime-kuma:
     image: louislam/uptime-kuma:latest

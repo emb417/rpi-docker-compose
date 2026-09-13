@@ -16,6 +16,7 @@ services:
       - rpi-network
     volumes:
       - ./certbot/conf:/etc/letsencrypt:ro
+      - ../nginx-logs:/var/log/nginx
     depends_on:
       - metaforiq-next
       - mistandlore
@@ -47,7 +48,7 @@ services:
     networks:
       - rpi-network
     volumes:
-      - ./libowski-bot-data:/app/data
+      - ../libowski-bot-data:/app/data
     logging: *default-logging
 
   # The Next.js App Service
@@ -67,7 +68,7 @@ services:
     networks:
       - rpi-network
     volumes:
-      - ~/uptime-kuma-data:/app/data
+      - ../uptime-kuma-data:/app/data
     logging: *default-logging
 
   # The Mist+Lore Next.js App
@@ -88,7 +89,7 @@ services:
     networks:
       - rpi-network
     volumes:
-      - ~/effin-money-data/db:/data/db
+      - ../effin-money-data/db:/data/db
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 5s
@@ -108,7 +109,7 @@ services:
     networks:
       - rpi-network
     volumes:
-      - ~/effin-money-data/fastembed-cache:/models
+      - ../effin-money-data/fastembed-cache:/models
     depends_on:
       effin-money-db:
         condition: service_healthy

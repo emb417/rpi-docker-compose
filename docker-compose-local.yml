@@ -17,6 +17,7 @@ services:
       - rpi-network
     volumes:
       - ./certbot/conf:/etc/letsencrypt
+      - ../nginx-logs:/var/log/nginx
     # The Nginx service depends on the Next.js app to be running.
     depends_on:
       - metaforiq-next
@@ -32,7 +33,7 @@ services:
     networks:
       - rpi-network
     volumes:
-      - ./libowski-bot-data:/app/data
+      - ../libowski-bot-data:/app/data
     logging: *default-logging
 
   # The Next.js App Service
